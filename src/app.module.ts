@@ -1,9 +1,6 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { EventsController } from './events/events.controller';
 import { EventsService } from './events/events.service';
-import { QueryBuilderService } from './query-builder/query-builder.service';
 import { KnexModule } from 'nest-knexjs';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
@@ -31,7 +28,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       },
     }),
   ],
-  controllers: [AppController, EventsController],
-  providers: [AppService, EventsService, QueryBuilderService],
+  controllers: [EventsController],
+  providers: [EventsService],
 })
 export class AppModule {}
