@@ -1,8 +1,9 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { EventsController } from './events/events.controller';
 import { EventsService } from './events/events.service';
 import { KnexModule } from 'nest-knexjs';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ApiAuthMiddleware } from './api-auth/api-auth.middleware';
 
 @Module({
   imports: [
@@ -31,4 +32,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
   controllers: [EventsController],
   providers: [EventsService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(ApiAuthMiddleware).forRoutes('*');
+  }
+}
