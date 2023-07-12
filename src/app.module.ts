@@ -5,7 +5,7 @@ import { KnexModule } from 'nest-knexjs';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ApiAuthMiddleware } from './api-auth/api-auth.middleware';
 import { WinstonModule, utilities } from 'nest-winston';
-import { format, transports } from 'winston';
+import { transports } from 'winston';
 
 @Module({
   imports: [
