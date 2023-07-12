@@ -16,11 +16,11 @@ export class EventsService {
 
   public async getEvents(options: GetEventsOptions) {
     const queryBuilder = this.client('six69_joodb_events').select('*');
-    if (options.eventType) {
+    if (options.eventType && options.eventType.length > 0) {
       queryBuilder.whereIn('event_type', options.eventType);
     }
 
-    if (options.voivodeship) {
+    if (options.voivodeship && options.voivodeship.length > 0) {
       queryBuilder.whereIn('voivodeship', options.voivodeship);
     }
 
@@ -31,9 +31,13 @@ export class EventsService {
       options.longitude
     ) {
       queryBuilder
-        .select(
-          `ROUND(ST_Distance_Sphere(ST_GeomFromText('POINT(${options.longitude} ${options.latitude})'), ST_GeomFromText(CONCAT('POINT(', \`long\`, ' ', lat, ')'))) / 1000) AS distance`,
+        .with(
+          'distance',
+          this.client.raw(
+            `select *, ROUND(ST_Distance_Sphere(ST_GeomFromText('POINT(${options.longitude} ${options.latitude})'), ST_GeomFromText(CONCAT('POINT(', \`long\`, ' ', lat, ')'))) / 1000) as distance from six69_joodb_events`,
+          ),
         )
+        .from('distance')
         .having('distance', '<=', options.range);
     }
 
@@ -59,7 +63,8 @@ export class EventsService {
         .orderBy('date_begin', 'asc');
     }
 
-    queryBuilder.limit(20).offset((options.page - 1) * 20);
+    if (options.page != null || typeof options.page != 'undefined')
+      queryBuilder.limit(20).offset((options.page - 1) * 20);
 
     return await queryBuilder;
   }
