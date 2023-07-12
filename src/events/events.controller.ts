@@ -26,73 +26,22 @@ export class EventsController {
     @Query('longitude')
     longitude?: string,
   ) {
-    try {
-      const events = await this.eventService.getEvents({
-        page,
-        eventType,
-        voivodeship,
-        year,
-        yearSort,
-        range: range ? parseInt(range) : null,
-        latitude,
-        longitude,
-      });
-      return events.map((event) => {
-        const dateBegin = event.date_begin;
-        const formattedDateBegin =
-          `0${dateBegin.getDate()}`.slice(-2) +
-          '-' +
-          `0${dateBegin.getMonth() + 1}`.slice(-2) +
-          '-' +
-          dateBegin.getFullYear();
-        const dateEnd = event.date_end;
-        const formattedDateEnd =
-          ('0' + dateEnd.getDate()).slice(-2) +
-          '-' +
-          ('0' + (dateEnd.getMonth() + 1)).slice(-2) +
-          '-' +
-          dateEnd.getFullYear();
-        return {
-          id: event.id,
-          name: event.name,
-          date_begin: formattedDateBegin,
-          date_end: formattedDateEnd,
-          event_type: event.event_type,
-          location: event.location,
-          address: event.address,
-          price: event.price,
-          description: event.description,
-          www_url: event.www_url,
-          fb_url: event.fb_url,
-          event_url: event.event_url,
-          review_url: event.review_url,
-          img_url: `https://konwenty-poludniowe.pl/images/joodb/db1/img${event.id}-thumb.jpg`,
-          participants: event.participants,
-          voivodeship: event.voivodeship,
-          lat: event.lat,
-          long: event.long,
-          cancelled: event.cancelled,
-        };
-      });
-    } catch (err) {
-      console.log('TEST');
-      console.log(err);
-    }
-  }
-
-  @Get('/:id')
-  public async getEvent(
-    @Param('id', ParseIntPipe)
-    id: number,
-  ) {
-    try {
-      const event = await this.eventService.getEvent(id);
-
+    const events = await this.eventService.getEvents({
+      page,
+      eventType,
+      voivodeship,
+      year,
+      yearSort,
+      range: range ? parseInt(range) : null,
+      latitude,
+      longitude,
+    });
+    return events.map((event) => {
       const dateBegin = event.date_begin;
       const formattedDateBegin =
-        ('0' + dateBegin.getDate()).slice(-2) +
+        `0${dateBegin.getDate()}`.slice(-2) +
         '-' +
-        ('0' + (dateBegin.getMonth() + 1)).slice(-2) +
+        `0${dateBegin.getMonth() + 1}`.slice(-2) +
         '-' +
         dateBegin.getFullYear();
       const dateEnd = event.date_end;
@@ -102,7 +51,6 @@ export class EventsController {
         ('0' + (dateEnd.getMonth() + 1)).slice(-2) +
         '-' +
         dateEnd.getFullYear();
-
       return {
         id: event.id,
         name: event.name,
@@ -124,8 +72,51 @@ export class EventsController {
         long: event.long,
         cancelled: event.cancelled,
       };
-    } catch (err) {
-      console.log(err);
-    }
+    });
+  }
+
+  @Get('/:id')
+  public async getEvent(
+    @Param('id', ParseIntPipe)
+    id: number,
+  ) {
+    const event = await this.eventService.getEvent(id);
+
+    const dateBegin = event.date_begin;
+    const formattedDateBegin =
+      ('0' + dateBegin.getDate()).slice(-2) +
+      '-' +
+      ('0' + (dateBegin.getMonth() + 1)).slice(-2) +
+      '-' +
+      dateBegin.getFullYear();
+    const dateEnd = event.date_end;
+    const formattedDateEnd =
+      ('0' + dateEnd.getDate()).slice(-2) +
+      '-' +
+      ('0' + (dateEnd.getMonth() + 1)).slice(-2) +
+      '-' +
+      dateEnd.getFullYear();
+
+    return {
+      id: event.id,
+      name: event.name,
+      date_begin: formattedDateBegin,
+      date_end: formattedDateEnd,
+      event_type: event.event_type,
+      location: event.location,
+      address: event.address,
+      price: event.price,
+      description: event.description,
+      www_url: event.www_url,
+      fb_url: event.fb_url,
+      event_url: event.event_url,
+      review_url: event.review_url,
+      img_url: `https://konwenty-poludniowe.pl/images/joodb/db1/img${event.id}-thumb.jpg`,
+      participants: event.participants,
+      voivodeship: event.voivodeship,
+      lat: event.lat,
+      long: event.long,
+      cancelled: event.cancelled,
+    };
   }
 }
