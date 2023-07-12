@@ -1,7 +1,8 @@
-import { Controller, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ParseEventTypePipe } from 'src/parse-event-type/parse-event-type.pipe';
 import { ParseVoivodeshipPipe } from 'src/parse-voivodeship/parse-voivodeship.pipe';
 import { EventsService } from './events.service';
+import { ParseIntPipe } from 'src/parse-int/parse-int.pipe';
 
 @Controller('v1/events')
 export class EventsController {
