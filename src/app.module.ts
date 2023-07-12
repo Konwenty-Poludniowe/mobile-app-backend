@@ -4,6 +4,8 @@ import { EventsService } from './events/events.service';
 import { KnexModule } from 'nest-knexjs';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ApiAuthMiddleware } from './api-auth/api-auth.middleware';
+import { WinstonModule, utilities } from 'nest-winston';
+import { format, transports } from 'winston';
 
 @Module({
   imports: [
@@ -27,6 +29,16 @@ import { ApiAuthMiddleware } from './api-auth/api-auth.middleware';
           },
         };
       },
+    }),
+    WinstonModule.forRoot({
+      level: 'silly',
+      format: utilities.format.nestLike(),
+      transports: [
+        new transports.Console(),
+        new transports.File({
+          filename: 'logs.txt',
+        }),
+      ],
     }),
   ],
   controllers: [EventsController],
