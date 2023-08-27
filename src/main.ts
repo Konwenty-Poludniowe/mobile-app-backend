@@ -12,6 +12,7 @@ async function bootstrap() {
       new transports.Console(),
       new transports.File({
         filename: 'logs.txt',
+        tailable: true,
       }),
     ],
   });
